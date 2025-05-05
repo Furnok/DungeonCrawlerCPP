@@ -14,15 +14,15 @@ class DUNGEONCRAWLER_API AMyHUD : public AHUD
 {
 	GENERATED_BODY()
 
-protected:
-    virtual void BeginPlay() override;
-
 public:
-    UPROPERTY(EditDefaultsOnly, Category = "UI")
-    TSubclassOf<class UUserWidget> MenuWidgetClass;
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void ShowWidget(TSubclassOf<UUserWidget> WidgetClass);
 
     UPROPERTY(EditDefaultsOnly, Category = "UI")
-    TSubclassOf<class UUserWidget> LobbyWidgetClass;
+    TSubclassOf<UUserWidget> MenuWidgetClass;
+
+    UPROPERTY(EditDefaultsOnly, Category = "UI")
+    TSubclassOf<UUserWidget> LobbyWidgetClass;
 
 private:
     UPROPERTY()

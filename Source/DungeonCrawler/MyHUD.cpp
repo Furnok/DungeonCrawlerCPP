@@ -2,32 +2,22 @@
 
 
 #include "MyHUD.h"
-#include "Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 
-void AMyHUD::BeginPlay()
+void AMyHUD::ShowWidget(TSubclassOf<UUserWidget> WidgetClass)
 {
-    Super::BeginPlay();
-
-    FString CurrentLevelName = UGameplayStatics::GetCurrentLevelName(GetWorld(), true);
-
-    if (CurrentLevelName == "L_Menu")
-    {
-        if (MenuWidgetClass)
-        {
-            CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), MenuWidgetClass);
-        }
-    }
-    else if (CurrentLevelName == "L_Lobby")
-    {
-        if (LobbyWidgetClass)
-        {
-            CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), LobbyWidgetClass);
-        }
-    }
-
     if (CurrentWidget)
     {
-        CurrentWidget->AddToViewport();
+        CurrentWidget->RemoveFromParent();
+        CurrentWidget = nullptr;
+    }
+
+    if (WidgetClass)
+    {
+        CurrentWidget = CreateWidget<UUserWidget>(GetWorld(), WidgetClass);
+        if (CurrentWidget)
+        {
+            CurrentWidget->AddToViewport();
+        }
     }
 }
