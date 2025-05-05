@@ -30,10 +30,10 @@ void UMyWorldSubsystem::ShowUIForCurrentLevel()
 
     if (CurrentLevelName == "L_Menu")
     {
-        HUD->ShowWidget(HUD->MenuWidgetClass);
+        HUD->ShowConstWidget(HUD->MainMenuWidgetClass);
     }
     else if (CurrentLevelName == "L_Lobby")
     {
-        HUD->ShowWidget(HUD->LobbyWidgetClass);
+        HUD->ShowConstWidget(HUD->LobbyWidgetClass);
     }
 }

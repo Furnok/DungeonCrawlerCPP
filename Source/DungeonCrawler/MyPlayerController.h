@@ -13,5 +13,10 @@ UCLASS()
 class DUNGEONCRAWLER_API AMyPlayerController : public APlayerController
 {
 	GENERATED_BODY()
-	
+
+public:
+	virtual void SetupInputComponent() override;
+
+	void HandleCloseMenu();
+
 };

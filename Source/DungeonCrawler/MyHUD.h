@@ -16,15 +16,48 @@ class DUNGEONCRAWLER_API AMyHUD : public AHUD
 
 public:
     UFUNCTION(BlueprintCallable, Category = "UI")
-    void ShowWidget(TSubclassOf<UUserWidget> WidgetClass);
+    void ShowConstWidget(TSubclassOf<UUserWidget> WidgetClass);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void CloseWidget(TSubclassOf<UUserWidget> WidgetClass);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void CloseAllWidget(TSubclassOf<UUserWidget> WidgetClass);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    UUserWidget* OpenWidget(TSubclassOf<UUserWidget> WidgetClass);
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void InputCloseWidget();
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void HandleMenu();
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void OpenMenu();
+
+    UFUNCTION(BlueprintCallable, Category = "UI")
+    void CloseMenu();
 
     UPROPERTY(EditDefaultsOnly, Category = "UI")
-    TSubclassOf<UUserWidget> MenuWidgetClass;
+    TSubclassOf<UUserWidget> MainMenuWidgetClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "UI")
     TSubclassOf<UUserWidget> LobbyWidgetClass;
 
+    UPROPERTY(EditDefaultsOnly, Category = "UI")
+    TSubclassOf<UUserWidget> MenuWidgetClass;
+
 private:
     UPROPERTY()
-    UUserWidget* CurrentWidget;
+    UUserWidget* CurrentMainWidget;
+
+    UPROPERTY()
+    UUserWidget* MenuWidgetInstance;
+
+    UPROPERTY()
+    TArray<UUserWidget*> WidgetStack;
+
+    UPROPERTY()
+    bool gamePause = false;
 };
