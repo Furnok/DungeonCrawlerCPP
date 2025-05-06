@@ -27,17 +27,6 @@ AMyCharacter::AMyCharacter()
 	TopDownCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	TopDownCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	TopDownCamera->bUsePawnControlRotation = false; // No rotation based on controller
-
-	// Create the mesh
-	CylinderMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CylinderMesh"));
-	CylinderMesh->SetupAttachment(RootComponent);
-
-	// Load a basic cylinder mesh from Engine content
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CylinderAsset(TEXT("/Engine/BasicShapes/Cylinder.Cylinder"));
-	if (CylinderAsset.Succeeded())
-	{
-		CylinderMesh->SetStaticMesh(CylinderAsset.Object);
-	}
 }
 
 // Called when the game starts or when spawned

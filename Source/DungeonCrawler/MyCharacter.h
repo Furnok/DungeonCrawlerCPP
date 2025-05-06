@@ -26,10 +26,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	// Mesh
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh)
-	UStaticMeshComponent* CylinderMesh;
-
 	// Camera boom positioning the camera above the character
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class USpringArmComponent* CameraBoom;

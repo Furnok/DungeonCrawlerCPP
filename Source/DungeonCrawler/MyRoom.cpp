@@ -1,0 +1,54 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+
+#include "MyRoom.h"
+
+// Sets default values
+AMyRoom::AMyRoom()
+{
+    PrimaryActorTick.bCanEverTick = false;
+
+    Root = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+    RootComponent = Root;
+
+    NorthDoor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("NorthDoor"));
+    NorthDoor->SetupAttachment(Root);
+
+    SouthDoor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("SouthDoor"));
+    SouthDoor->SetupAttachment(Root);
+
+    EastDoor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("EastDoor"));
+    EastDoor->SetupAttachment(Root);
+
+    WestDoor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WestDoor"));
+    WestDoor->SetupAttachment(Root);
+}
+
+void AMyRoom::OnConstruction(const FTransform& Transform)
+{
+    Super::OnConstruction(Transform);
+}
+
+void AMyRoom::RemoveDoor(FVector2D Direction)
+{
+    if (Direction == FVector2D(0, 1) && NorthDoor)
+    {
+        NorthDoor->SetVisibility(false);
+        NorthDoor->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    }
+    else if (Direction == FVector2D(0, -1) && SouthDoor)
+    {
+        SouthDoor->SetVisibility(false);
+        SouthDoor->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    }
+    else if (Direction == FVector2D(1, 0) && EastDoor)
+    {
+        EastDoor->SetVisibility(false);
+        EastDoor->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    }
+    else if (Direction == FVector2D(-1, 0) && WestDoor)
+    {
+        WestDoor->SetVisibility(false);
+        WestDoor->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+    }
+}
