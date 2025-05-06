@@ -21,9 +21,17 @@ public:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
+    void ResetLevel();
+
 protected:
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AMyRoom> RoomClass;
+
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AMyRoom> RoomEnterClass;
+
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<class AMyRoom> RoomExitClass;
 
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AMyCorridor> CorridorClass;
@@ -37,14 +45,16 @@ protected:
     UPROPERTY()
     TMap<FVector2D, AMyRoom*> SpawnedRooms;
 
+    UPROPERTY()
+    TArray<AMyCorridor*> SpawnedCorridors;
+
 private:
     TSet<FVector2D> OccupiedTiles;
 
     void GenerateLevel();
-    void ResetLevel();
     bool IsOccupied(FVector2D Pos);
     void MarkOccupied(FVector2D Pos);
-    void SpawnRoomAt(FVector2D GridPos);
+    void SpawnRoomAt(FVector2D GridPos, TSubclassOf<AMyRoom> RoomToSpawn);
     void SpawnCorridorBetween(FVector2D From, FVector2D To);
     TArray<FVector2D> GetUnoccupiedNeighbors(FVector2D From);
 };

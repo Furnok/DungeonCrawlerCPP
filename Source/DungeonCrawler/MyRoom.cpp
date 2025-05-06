@@ -2,6 +2,12 @@
 
 
 #include "MyRoom.h"
+#include "Components/BoxComponent.h"
+#include "GameFramework/Actor.h"
+#include "Kismet/GameplayStatics.h"
+#include "Engine/Engine.h"
+#include "MyCharacter.h"
+#include "LevelGenerator.h"
 
 // Sets default values
 AMyRoom::AMyRoom()
@@ -22,6 +28,57 @@ AMyRoom::AMyRoom()
 
     WestDoor = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WestDoor"));
     WestDoor->SetupAttachment(Root);
+
+    TriggerBox = CreateDefaultSubobject<UBoxComponent>(TEXT("TriggerBox"));
+    TriggerBox->SetupAttachment(Root);
+
+    TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AMyRoom::OnOverlapBegin);
+    TriggerBox->OnComponentEndOverlap.AddDynamic(this, &AMyRoom::OnOverlapEnd);
+}
+
+void AMyRoom::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
+    bool bFromSweep, const FHitResult& SweepResult)
+{
+    if (OtherActor && OtherActor != this && IsImportantRoom)
+    {
+        AMyCharacter* PlayerCharacter = Cast<AMyCharacter>(OtherActor);
+
+        if (PlayerCharacter)
+        {
+            if (IsExit)
+            {
+                ALevelGenerator* LevelGen = Cast<ALevelGenerator>(
+                    UGameplayStatics::GetActorOfClass(GetWorld(), ALevelGenerator::StaticClass()));
+
+                if (LevelGen)
+                {
+                    LevelGen->ResetLevel();
+
+                    FVector NewLocation(0.f, 0.f, 90.f);
+                    PlayerCharacter->SetActorLocation(NewLocation);
+                }
+            }
+            else
+            {
+                //UGameplayStatics::OpenLevel(this, FName("L_Lobby"));
+            }
+        }
+    }
+}
+
+void AMyRoom::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
+    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+    if (OtherActor && OtherActor != this && IsImportantRoom)
+    {
+        AMyCharacter* PlayerCharacter = Cast<AMyCharacter>(OtherActor);
+
+        if (PlayerCharacter)
+        {
+            //UE_LOG(LogTemp, Warning, TEXT("End Overlap with: %s"), *OtherActor->GetName());
+        }
+    }
 }
 
 void AMyRoom::OnConstruction(const FTransform& Transform)

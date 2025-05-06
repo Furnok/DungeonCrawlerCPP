@@ -24,7 +24,7 @@ void ALevelGenerator::BeginPlay()
 void ALevelGenerator::GenerateLevel()
 {
     FVector2D StartPos(0, 0);
-    SpawnRoomAt(StartPos);
+    SpawnRoomAt(StartPos, RoomEnterClass);
     MarkOccupied(StartPos);
 
     TArray<FVector2D> RoomPositions = { StartPos };
@@ -38,10 +38,66 @@ void ALevelGenerator::GenerateLevel()
         {
             FVector2D To = Neighbors[FMath::RandRange(0, Neighbors.Num() - 1)];
 
-            SpawnRoomAt(To);
+            SpawnRoomAt(To, RoomClass);
             RoomPositions.Add(To);
             MarkOccupied(To);
             SpawnCorridorBetween(From, To);
+        }
+    }
+
+    if (RoomPositions.Num() > 1)
+    {
+        FVector2D ExitPos;
+        do
+        {
+            ExitPos = RoomPositions[FMath::RandRange(1, RoomPositions.Num() - 1)];
+        } while (ExitPos == StartPos); // Ensure not placing at start
+
+        // Remove existing room at ExitPos
+        if (AMyRoom* OldRoom = SpawnedRooms.FindRef(ExitPos))
+        {
+            OldRoom->Destroy();
+        }
+
+        // Spawn the exit room
+        SpawnRoomAt(ExitPos, RoomExitClass);
+
+        if (AMyRoom* ExitRoom = SpawnedRooms.FindRef(ExitPos))
+        {
+            TArray<FVector2D> Directions = {
+                FVector2D(1, 0),   // Right
+                FVector2D(-1, 0),  // Left
+                FVector2D(0, 1),   // Up
+                FVector2D(0, -1)   // Down
+            };
+
+            for (FVector2D Dir : Directions)
+            {
+                FVector2D NeighborPos = ExitPos + Dir;
+
+                if (AMyRoom* Neighbor = SpawnedRooms.FindRef(NeighborPos))
+                {
+                    FVector2D Dir2 = NeighborPos - ExitPos;
+
+                    // Remove the wall from the "From" room
+                    if (Dir2.X < 0)  // Left (X negative direction)
+                    {
+                        ExitRoom->RemoveDoor(FVector2D(0, -1)); // Remove bottom (South) wall
+                    }
+                    else if (Dir2.X > 0)  // Right (X positive direction)
+                    {
+                        ExitRoom->RemoveDoor(FVector2D(0, 1)); // Remove top (North) wall
+                    }
+                    else if (Dir2.Y > 0)  // Up (Y positive direction)
+                    {
+                        ExitRoom->RemoveDoor(FVector2D(1, 0)); // Remove west (West) wall
+                    }
+                    else if (Dir2.Y < 0)  // Down (Y negative direction)
+                    {
+                        ExitRoom->RemoveDoor(FVector2D(-1, 0)); // Remove east (East) wall
+                    }
+                }
+            }
         }
     }
 }
@@ -57,6 +113,17 @@ void ALevelGenerator::ResetLevel()
             Room->Destroy();
         }
     }
+
+    // Destroy all spawned corridors
+    for (AMyCorridor* Corridor : SpawnedCorridors)
+    {
+        if (Corridor)
+        {
+            Corridor->Destroy();
+        }
+    }
+
+    SpawnedCorridors.Empty();
 
     // Clear the list of spawned rooms
     SpawnedRooms.Empty();
@@ -78,10 +145,10 @@ void ALevelGenerator::MarkOccupied(FVector2D Pos)
     OccupiedTiles.Add(Pos);
 }
 
-void ALevelGenerator::SpawnRoomAt(FVector2D GridPos)
+void ALevelGenerator::SpawnRoomAt(FVector2D GridPos, TSubclassOf<AMyRoom> RoomToSpawn)
 {
     FVector WorldLocation(GridPos.X * TileSize, GridPos.Y * TileSize, 0.0f);
-    AMyRoom* NewRoom = GetWorld()->SpawnActor<AMyRoom>(RoomClass, WorldLocation, FRotator::ZeroRotator);
+    AMyRoom* NewRoom = GetWorld()->SpawnActor<AMyRoom>(RoomToSpawn, WorldLocation, FRotator::ZeroRotator);
     if (NewRoom)
     {
         SpawnedRooms.Add(GridPos, NewRoom);
@@ -106,6 +173,11 @@ void ALevelGenerator::SpawnCorridorBetween(FVector2D From, FVector2D To)
 
     // Spawn the Corridor Actor
     AMyCorridor* Corridor = GetWorld()->SpawnActor<AMyCorridor>(CorridorClass, WorldPos, Rotation);
+
+    if (Corridor)
+    {
+        SpawnedCorridors.Add(Corridor);
+    }
 
     // Ensure the "From" room is spawned and added to SpawnedRooms
     if (AMyRoom* FromRoom = SpawnedRooms.FindRef(From))
