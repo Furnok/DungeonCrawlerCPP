@@ -38,7 +38,10 @@ void ALevelGenerator::GenerateLevel()
         {
             FVector2D To = Neighbors[FMath::RandRange(0, Neighbors.Num() - 1)];
 
-            SpawnRoomAt(To, RoomClass);
+            int32 Index = FMath::RandRange(0, RoomClass.Num() - 1);
+            TSubclassOf<AMyRoom> SelectedClass = RoomClass[Index];
+
+            SpawnRoomAt(To, SelectedClass);
             RoomPositions.Add(To);
             MarkOccupied(To);
             SpawnCorridorBetween(From, To);

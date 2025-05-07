@@ -25,7 +25,7 @@ public:
 
 protected:
     UPROPERTY(EditAnywhere)
-    TSubclassOf<class AMyRoom> RoomClass;
+    TArray<TSubclassOf<class AMyRoom>> RoomClass;
 
     UPROPERTY(EditAnywhere)
     TSubclassOf<class AMyRoom> RoomEnterClass;
