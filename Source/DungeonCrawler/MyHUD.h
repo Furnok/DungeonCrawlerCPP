@@ -46,6 +46,9 @@ public:
     TSubclassOf<UUserWidget> LobbyWidgetClass;
 
     UPROPERTY(EditDefaultsOnly, Category = "UI")
+    TSubclassOf<UUserWidget> GameWidgetClass;
+
+    UPROPERTY(EditDefaultsOnly, Category = "UI")
     TSubclassOf<UUserWidget> MenuWidgetClass;
 
 private:

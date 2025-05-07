@@ -28,7 +28,11 @@ void UMyWorldSubsystem::ShowUIForCurrentLevel()
 
     if (!HUD) return;
 
-    if (CurrentLevelName == "L_Menu")
+    if (CurrentLevelName == "L_Game")
+    {
+        HUD->ShowConstWidget(HUD->GameWidgetClass);
+    }
+    else if (CurrentLevelName == "L_Menu")
     {
         HUD->ShowConstWidget(HUD->MainMenuWidgetClass);
     }
