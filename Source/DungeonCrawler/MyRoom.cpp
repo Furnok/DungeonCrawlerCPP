@@ -36,6 +36,24 @@ AMyRoom::AMyRoom()
     TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AMyRoom::OnOverlapBegin);
 }
 
+void AMyRoom::BeginPlay()
+{
+    Super::BeginPlay();
+
+    if (ChestClass)
+    {
+        float RandomValue = FMath::FRandRange(0.f, 100.f);
+
+        if (RandomValue <= SpawnChance)
+        {
+            FVector SpawnLocation = GetActorLocation() + ChestSpawn;
+            FRotator SpawnRotation = FRotator(0.f, 90.f, 0.f);
+
+            GetWorld()->SpawnActor<AActor>(ChestClass, SpawnLocation, SpawnRotation);
+        }
+    }
+}
+
 void AMyRoom::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex,
     bool bFromSweep, const FHitResult& SweepResult)

@@ -15,6 +15,8 @@ public:
 	// Sets default values for this actor's properties
 	AMyRoom();
 
+	virtual void BeginPlay() override;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Mesh")
 	USceneComponent* Root;
 
@@ -34,10 +36,22 @@ public:
 	class UBoxComponent* TriggerBox;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
+	TSubclassOf<AActor> ChestClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	bool IsImportantRoom = false;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	bool IsExit = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
+	bool HaveChest = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
+	float SpawnChance = 20.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
+	FVector ChestSpawn = FVector(0.f, 0.f, 50.f);
 
 	UFUNCTION()
 	void RemoveDoor(FVector2D Direction);
