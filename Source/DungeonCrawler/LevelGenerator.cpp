@@ -78,24 +78,44 @@ void ALevelGenerator::GenerateLevel()
 
                 if (AMyRoom* Neighbor = SpawnedRooms.FindRef(NeighborPos))
                 {
-                    FVector2D Dir2 = NeighborPos - ExitPos;
+                    // Check if a corridor exists between ExitPos and NeighborPos
+                    bool bCorridorExists = false;
+                    for (AMyCorridor* Corridor : SpawnedCorridors)
+                    {
+                        if (!Corridor) continue;
 
-                    // Remove the wall from the "From" room
-                    if (Dir2.X < 0)  // Left (X negative direction)
-                    {
-                        ExitRoom->RemoveDoor(FVector2D(0, -1)); // Remove bottom (South) wall
+                        FVector CorridorLoc = Corridor->GetActorLocation();
+                        FVector ExpectedLoc = FVector((ExitPos.X + NeighborPos.X) * 0.5f * TileSize,
+                            (ExitPos.Y + NeighborPos.Y) * 0.5f * TileSize,
+                            0.0f);
+
+                        if (CorridorLoc.Equals(ExpectedLoc, 1.0f)) // Tolerance of 1.0f
+                        {
+                            bCorridorExists = true;
+                            break;
+                        }
                     }
-                    else if (Dir2.X > 0)  // Right (X positive direction)
+
+                    if (bCorridorExists)
                     {
-                        ExitRoom->RemoveDoor(FVector2D(0, 1)); // Remove top (North) wall
-                    }
-                    else if (Dir2.Y > 0)  // Up (Y positive direction)
-                    {
-                        ExitRoom->RemoveDoor(FVector2D(1, 0)); // Remove west (West) wall
-                    }
-                    else if (Dir2.Y < 0)  // Down (Y negative direction)
-                    {
-                        ExitRoom->RemoveDoor(FVector2D(-1, 0)); // Remove east (East) wall
+                        FVector2D Dir2 = NeighborPos - ExitPos;
+
+                        if (Dir2.X < 0)
+                        {
+                            ExitRoom->RemoveDoor(FVector2D(0, -1)); // South
+                        }
+                        else if (Dir2.X > 0)
+                        {
+                            ExitRoom->RemoveDoor(FVector2D(0, 1)); // North
+                        }
+                        else if (Dir2.Y > 0)
+                        {
+                            ExitRoom->RemoveDoor(FVector2D(1, 0)); // West
+                        }
+                        else if (Dir2.Y < 0)
+                        {
+                            ExitRoom->RemoveDoor(FVector2D(-1, 0)); // East
+                        }
                     }
                 }
             }
