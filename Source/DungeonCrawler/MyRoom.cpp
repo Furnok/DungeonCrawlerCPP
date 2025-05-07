@@ -58,10 +58,6 @@ void AMyRoom::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
                     if (HUD)
                     {
                         HUD->OpenWidget(HUD->PopupExitWidgetClass);
-
-                        //PlayerCharacter->TPSpawn();
-
-                        //LevelGen->ResetLevel();
                     }
                 }
             }
