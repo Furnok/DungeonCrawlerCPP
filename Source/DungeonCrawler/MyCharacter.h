@@ -41,5 +41,7 @@ public:
 	// Movement functions
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+
+	UFUNCTION(BlueprintCallable)
 	void TPSpawn();
 };

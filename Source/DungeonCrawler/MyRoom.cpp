@@ -8,6 +8,7 @@
 #include "Engine/Engine.h"
 #include "MyCharacter.h"
 #include "LevelGenerator.h"
+#include "MyHUD.h"
 
 // Sets default values
 AMyRoom::AMyRoom()
@@ -33,7 +34,6 @@ AMyRoom::AMyRoom()
     TriggerBox->SetupAttachment(Root);
 
     TriggerBox->OnComponentBeginOverlap.AddDynamic(this, &AMyRoom::OnOverlapBegin);
-    TriggerBox->OnComponentEndOverlap.AddDynamic(this, &AMyRoom::OnOverlapEnd);
 }
 
 void AMyRoom::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
@@ -53,29 +53,27 @@ void AMyRoom::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 
                 if (LevelGen)
                 {
-                    PlayerCharacter->TPSpawn();
+                    AMyHUD* HUD = Cast<AMyHUD>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD());
 
-                    LevelGen->ResetLevel();
+                    if (HUD)
+                    {
+                        HUD->OpenWidget(HUD->PopupExitWidgetClass);
+
+                        //PlayerCharacter->TPSpawn();
+
+                        //LevelGen->ResetLevel();
+                    }
                 }
             }
             else
             {
-                UGameplayStatics::OpenLevel(this, FName("L_Lobby"));
+                AMyHUD* HUD = Cast<AMyHUD>(UGameplayStatics::GetPlayerController(GetWorld(), 0)->GetHUD());
+
+                if (HUD)
+                {
+                    HUD->OpenWidget(HUD->PopupEnterWidgetClass);
+                }
             }
-        }
-    }
-}
-
-void AMyRoom::OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor,
-    UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
-{
-    if (OtherActor && OtherActor != this && IsImportantRoom)
-    {
-        AMyCharacter* PlayerCharacter = Cast<AMyCharacter>(OtherActor);
-
-        if (PlayerCharacter)
-        {
-            //UE_LOG(LogTemp, Warning, TEXT("End Overlap with: %s"), *OtherActor->GetName());
         }
     }
 }

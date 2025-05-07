@@ -3,6 +3,7 @@
 
 #include "MyHUD.h"
 #include "Blueprint/UserWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 void AMyHUD::ShowConstWidget(TSubclassOf<UUserWidget> WidgetClass)
 {
@@ -100,9 +101,13 @@ void AMyHUD::HandleMenu()
     {
         CloseMenu();
     }
-    else
+    else if (!gamePause && !UGameplayStatics::IsGamePaused(GetWorld()))
     {
         OpenMenu();
+    }
+    else if (UGameplayStatics::IsGamePaused(GetWorld()))
+    {
+        InputCloseWidget();
     }
 }
 
