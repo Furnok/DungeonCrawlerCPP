@@ -56,6 +56,7 @@ void ALevelGenerator::GenerateLevel()
         // Remove existing room at ExitPos
         if (AMyRoom* OldRoom = SpawnedRooms.FindRef(ExitPos))
         {
+            SpawnedRooms.Remove(ExitPos);
             OldRoom->Destroy();
         }
 

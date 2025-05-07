@@ -53,15 +53,15 @@ void AMyRoom::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherA
 
                 if (LevelGen)
                 {
-                    LevelGen->ResetLevel();
-
-                    FVector NewLocation(0.f, 0.f, 90.f);
+                    FVector NewLocation(300.f, 0.f, 90.f);
                     PlayerCharacter->SetActorLocation(NewLocation);
+
+                    LevelGen->ResetLevel();
                 }
             }
             else
             {
-                //UGameplayStatics::OpenLevel(this, FName("L_Lobby"));
+                UGameplayStatics::OpenLevel(this, FName("L_Lobby"));
             }
         }
     }
