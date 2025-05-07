@@ -49,7 +49,7 @@ void AMyRoom::BeginPlay()
             FVector SpawnLocation = GetActorLocation() + ChestSpawn;
             FRotator SpawnRotation = FRotator(0.f, 90.f, 0.f);
 
-            GetWorld()->SpawnActor<AActor>(ChestClass, SpawnLocation, SpawnRotation);
+            SpawnedChest = GetWorld()->SpawnActor<AActor>(ChestClass, SpawnLocation, SpawnRotation);
         }
     }
 }

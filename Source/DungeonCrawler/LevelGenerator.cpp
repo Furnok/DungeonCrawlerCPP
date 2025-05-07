@@ -60,6 +60,12 @@ void ALevelGenerator::GenerateLevel()
         if (AMyRoom* OldRoom = SpawnedRooms.FindRef(ExitPos))
         {
             SpawnedRooms.Remove(ExitPos);
+
+            if (OldRoom->SpawnedChest)
+            {
+                OldRoom->SpawnedChest->Destroy();
+            }
+
             OldRoom->Destroy();
         }
 
@@ -134,6 +140,11 @@ void ALevelGenerator::ResetLevel()
         AMyRoom* Room = RoomEntry.Value;
         if (Room)
         {
+            if (Room->SpawnedChest)
+            {
+                Room->SpawnedChest->Destroy();
+            }
+
             Room->Destroy();
         }
     }

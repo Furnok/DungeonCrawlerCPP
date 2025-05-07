@@ -53,6 +53,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Room")
 	FVector ChestSpawn = FVector(0.f, 0.f, 50.f);
 
+	UPROPERTY()
+	AActor* SpawnedChest;
+
 	UFUNCTION()
 	void RemoveDoor(FVector2D Direction);
 
