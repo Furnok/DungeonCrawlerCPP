@@ -34,6 +34,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	TPSpawn();
 }
 
 // Called every frame
@@ -70,3 +71,7 @@ void AMyCharacter::MoveRight(float Value)
 	}
 }
 
+void AMyCharacter::TPSpawn()
+{
+	SetActorLocation(PosSpawn);
+}

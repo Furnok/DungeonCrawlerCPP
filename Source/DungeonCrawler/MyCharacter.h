@@ -34,7 +34,12 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
 	class UCameraComponent* TopDownCamera;
 
+	// Top-down camera
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawn")
+	FVector PosSpawn = FVector(-300.f, 0.f, 125.f);
+
 	// Movement functions
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+	void TPSpawn();
 };
